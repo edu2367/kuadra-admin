@@ -1,0 +1,131 @@
+{% extends "admin/layout.html" %}
+{% block content %}
+
+<div class="dash-head" style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px;">
+    <div>
+        <h2 class="dash-title">KUADRA · Resumen</h2>
+        <div class="muted small">Vista general del negocio (últimos {{ days }} días)</div>
+    </div>
+
+    <form method="get" style="display:flex;gap:10px;align-items:center;">
+        <select class="select" name="sucursal_id" onchange="this.form.submit()">
+            <option value="">Todas las sucursales</option>
+            {% for s in sucursales %}
+            <option value="{{ s.id }}" {% if s.id==sucursal_id %}selected{% endif %}>{{ s.nombre }}</option>
+            {% endfor %}
+        </select>
+
+        <select class="select" name="days" onchange="this.form.submit()">
+            {% for d in [7,14,30,60] %}
+            <option value="{{ d }}" {% if d==days %}selected{% endif %}>{{ d }} días</option>
+            {% endfor %}
+        </select>
+    </form>
+</div>
+
+<!-- KPI GRID -->
+<div class="grid grid-4" style="margin-top:14px;">
+    <div class="card kpi">
+        <div class="kpi-num">{{ total_ventas_7d }}</div>
+        <div class="kpi-label">Ventas ({{ days }} días)</div>
+        <div class="muted small">Cantidad de ventas</div>
+    </div>
+
+    <div class="card kpi">
+        <div class="kpi-num">{{ items_7d }}</div>
+        <div class="kpi-label">Unidades vendidas</div>
+        <div class="muted small">Suma de ítems</div>
+    </div>
+
+    <div class="card kpi">
+        <div class="kpi-num">{{ stock_bajo_count }}</div>
+        <div class="kpi-label">Stock bajo</div>
+        <div class="muted small">Productos ≤ 10</div>
+    </div>
+
+    <div class="card kpi">
+        <div class="kpi-num">{{ stock_critico_count }}</div>
+        <div class="kpi-label">Stock crítico</div>
+        <div class="muted small">Productos ≤ 5</div>
+    </div>
+</div>
+
+<!-- GRID 2 columnas -->
+<div class="grid grid-2" style="margin-top:14px;">
+    <!-- Gráfico -->
+    <div class="card">
+        <div class="card-h">
+            <div>
+                <div class="h1">Ventas últimos {{ days }} días</div>
+                <div class="muted small">Tendencia por día + promedio</div>
+            </div>
+        </div>
+        <div class="card-b">
+            <canvas id="ventasChart" data-labels='{{ chart_labels|tojson }}' data-values='{{ chart_values|tojson }}'
+                height="140"></canvas>
+        </div>
+    </div>
+
+    <!-- Top productos -->
+    <div class="card">
+        <div class="card-h">
+            <div>
+                <div class="h1">Productos más vendidos</div>
+                <div class="muted small">Top por unidades</div>
+            </div>
+        </div>
+        <div class="card-b">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th style="width:120px;text-align:right;">Unidades</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in top_productos %}
+                    <tr>
+                        <td>{{ row.nombre }}</td>
+                        <td style="text-align:right;font-weight:900;">{{ row.qty }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td class="muted" colspan="2">Aún no hay datos.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const el = document.getElementById('ventasChart');
+    const labels = JSON.parse(el.dataset.labels || "[]");
+    const values = JSON.parse(el.dataset.values || "[]");
+
+
+
+    const avg = values.length ? (values.reduce((a, b) => a + b, 0) / values.length) : 0;
+    const avgLine = values.map(() => avg);
+
+    new Chart(el, {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [
+                { label: 'Ventas por día', data: values, tension: 0.35, fill: true },
+                { label: 'Promedio', data: avgLine, borderDash: [6, 6], pointRadius: 0, tension: 0 }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'top' } },
+            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+        }
+    });
+</script>
+
+{% endblock %}

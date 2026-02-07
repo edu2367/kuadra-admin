@@ -1,0 +1,143 @@
+{% extends "admin/layout.html" %}
+{% block content %}
+
+{% set LOW_STOCK = 5 %}
+
+<div class="card">
+    <div class="card-h">
+        <div>
+            <div class="h1">Stock</div>
+            <div class="muted">Selecciona sucursal y revisa alertas de stock bajo.</div>
+        </div>
+        <span class="pill">Sucursal: {{ sucursal_id or "-" }}</span>
+    </div>
+
+    <div class="card-b">
+        <div class="row" style="display:flex; gap:12px; flex-wrap:wrap; align-items:end;">
+            <form method="get" action="/admin/stock" style="display:flex; gap:12px; flex-wrap:wrap; align-items:end;">
+                <div class="field" style="min-width:320px">
+                    <label>Sucursal</label>
+                    <select class="select" name="sucursal_id" onchange="this.form.submit()">
+                        {% for s in sucursales %}
+                        <option value="{{ s.id }}" {% if s.id==sucursal_id %}selected{% endif %}>
+                            {{ s.nombre }}{% if s.direccion %} — {{ s.direccion }}{% endif %}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="field" style="min-width:320px; flex:1">
+                    <label>Buscar producto</label>
+                    <input id="q" class="input" placeholder="Filtrar por nombre o SKU..." oninput="filtrar()">
+                </div>
+            </form>
+            <div class="muted small" style="margin-bottom:8px;">
+                🟢 OK &gt; 10 · 🟡 Bajo ≤ 10 · 🔴 Crítico ≤ 5
+            </div>
+
+            <table class="table" id="tabla">
+                <thead>
+                    ...
+
+                    <span class="pill" id="count">0 visibles</span>
+        </div>
+    </div>
+</div>
+
+<div class="card-h">
+    <div>
+        <div class="h2">Productos</div>
+        <div class="muted" style="font-size:12px">
+            Stock bajo cuando ≤ {{ LOW_STOCK }}
+        </div>
+    </div>
+</div>
+
+<div class="card-b table-wrap">
+    <table class="table" id="tabla">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th style="width:140px">Stock</th>
+                <th>Estado</th>
+                <th style="width:120px">Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in productos %}
+            {% set qty = stock_map.get(p.id, 0) %}
+
+            <tr class="fila" data-qty="{{ qty }}" data-text="{{ (p.nombre ~ ' ' ~ (p.sku or ''))|lower }}">
+                <td>
+                    <div class="t-title">{{ p.nombre }}</div>
+                    <div class="t-sub muted">SKU: {{ p.sku or "-" }}</div>
+                </td>
+
+                <td style="font-weight:900;">{{ qty }}</td>
+
+                <td>
+                    {% if qty <= STOCK_CRITICO %} <span class="badge crit">Stock crítico</span>
+                        {% elif qty <= STOCK_BAJO %} <span class="badge low">Stock bajo</span>
+                            {% else %}
+                            <span class="badge ok">OK</span>
+                            {% endif %}
+                </td>
+
+                <td>
+                    <form action="/admin/stock/ajustar" method="post">
+                        <input type="hidden" name="sucursal_id" value="{{ sucursal_id }}">
+                        <input type="hidden" name="producto_id" value="{{ p.id }}">
+                        <input class="delta" type="hidden" name="delta" value="0">
+
+                        <button type="button" class="btn btn-ghost" onclick="ajustarStock(this)">
+                            Ajustar
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</div>
+
+<script>
+    function filtrar() {
+        const q = (document.getElementById("q").value || "").toLowerCase().trim();
+        const filas = document.querySelectorAll("#tabla tbody .fila");
+        let visible = 0;
+
+        filas.forEach(tr => {
+            const txt = tr.dataset.text || "";
+            const show = !q || txt.includes(q);
+            tr.style.display = show ? "" : "none";
+            if (show) visible++;
+        });
+
+        document.getElementById("count").textContent = visible + " visibles";
+    }
+
+    function ajustarStock(btn) {
+        const tr = btn.closest("tr");
+        const form = btn.closest("form");
+        const deltaInput = form.querySelector(".delta");
+
+        const actual = parseInt(tr.dataset.qty || "0", 10);
+
+        const nuevo = prompt("Nuevo stock (0 o más):", String(actual));
+        if (nuevo === null) return;
+
+        const n = parseInt(nuevo, 10);
+        if (Number.isNaN(n) || n < 0) {
+            alert("Ingresa un número válido (0 o más).");
+            return;
+        }
+
+        deltaInput.value = String(n - actual);
+        form.submit();
+    }
+
+    filtrar();
+</script>
+
+{% endblock %}

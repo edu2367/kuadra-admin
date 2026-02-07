@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vivero | Panel</title>
+
+    <link rel="stylesheet" href="/static/app.css">
+</head>
+
+<body class="app">
+
+    <aside class="sidebar">
+        <div class="brand">
+            <img class="brand-logo" src="/static/logo_frutales.svg" alt="Frutales Verde Limón">
+            <div class="brand-sub">Panel de gestión</div>
+        </div>
+
+        <nav class="nav">
+            <a class="nav-item {% if active=='dashboard' %}active{% endif %}" href="/panel/dashboard">
+                <span class="ico" aria-hidden="true">▦</span>
+                <span>Resumen</span>
+            </a>
+
+            <a class="nav-item {% if active=='productos' %}active{% endif %}" href="/panel/productos">
+                <span class="ico" aria-hidden="true">⌁</span>
+                <span>Productos</span>
+            </a>
+
+            <a class="nav-item {% if active=='stock' %}active{% endif %}" href="/panel/stock">
+                <span class="ico" aria-hidden="true">⬚</span>
+                <span>Stock</span>
+            </a>
+
+            <div class="nav-sep"></div>
+
+            <a class="nav-item disabled" href="#" tabindex="-1" aria-disabled="true">
+                <span class="ico" aria-hidden="true">◎</span>
+                <span>Ventas</span>
+                <span class="tag">pronto</span>
+            </a>
+
+            <a class="nav-item disabled" href="#" tabindex="-1" aria-disabled="true">
+                <span class="ico" aria-hidden="true">◔</span>
+                <span>Análisis</span>
+                <span class="tag">pronto</span>
+            </a>
+
+            <a class="nav-item disabled" href="#" tabindex="-1" aria-disabled="true">
+                <span class="ico" aria-hidden="true">⇩</span>
+                <span>Reportes Excel</span>
+                <span class="tag">pronto</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="tiny">Frutales Verde Limón</div>
+            <div class="tiny muted">{{ request.client.host }}</div>
+        </div>
+    </aside>

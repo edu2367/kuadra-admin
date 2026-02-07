@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ title or "Admin" }} | Frutales Verde Limón</title>
+    <link rel="stylesheet" href="/static/admin.css?v=2">s
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js">
+    </script>
+
+    <style>
+        /* Forzar iconos monocromáticos */
+        .nav-item .ico {
+            filter: grayscale(100%) brightness(1.1);
+            opacity: 0.85;
+        }
+
+        /* Activo: un poco más fuerte */
+        .nav-item.active .ico {
+            filter: grayscale(100%) brightness(1.3);
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body class="app">
+    <aside class="sidebar">
+        <div class="brand">
+            <img src="/static/kuadra-logo.svg?v=3" alt="KUADRA" class="brand-logo">
+            <div class="brand-sub">Panel Admin</div>
+        </div>
+
+        <nav class="nav">
+            <a class="nav-item {% if active=='dashboard' %}active{% endif %}" href="/admin/dashboard">
+                <span class="ico">▦</span>
+                <span>Resumen</span>
+            </a>
+
+            <a class="nav-item {% if active=='productos' %}active{% endif %}" href="/admin/productos">
+                <span class="ico">⚙</span>
+                <span>Productos</span>
+            </a>
+
+            <a class="nav-item {% if active=='stock' %}active{% endif %}" href="/admin/stock">
+                <span class="ico">▢</span>
+                <span>Stock</span>
+            </a>
+
+            <div class="nav-sep"></div>
+
+            <a class="nav-item {% if active=='ventas' %}active{% endif %}" href="/admin/ventas">
+                <span class="ico">$</span>
+                <span>Ventas</span>
+            </a>
+
+            <a class="nav-item {% if active=='analisis' %}active{% endif %}" href="/admin/analisis">
+                <span class="ico">📊</span>
+                <span>Análisis</span>
+            </a>
+
+            <a class="nav-item {% if active=='reportes' %}active{% endif %}" href="/admin/reportes">
+                <span class="ico">📄</span>
+                <span>Reportes Excel</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="tiny">Frutales Verde Limón</div>
+            <div class="tiny muted">127.0.0.1</div>
+        </div>
+    </aside>
+
+    <main class="main">
+        <header class="topbar">
+            <div>
+                <div class="page-title">{{ title or "Admin" }}</div>
+                {% if subtitle %}<div class="page-sub">{{ subtitle }}</div>{% endif %}
+            </div>
+        </header>
+
+        <section class="content">
+            {% block content %}{% endblock %}
+        </section>
+    </main>
+</body>
+
+</html>

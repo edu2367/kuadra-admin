@@ -1,0 +1,152 @@
+{% extends "admin/layout.html" %}
+{% block content %}
+
+<div class="dash-head">
+    <div>
+        <h2 class="dash-title">Análisis</h2>
+        <div class="muted small">Vista general · últimos {{ days }} días</div>
+    </div>
+
+    <div style="display:flex; gap:8px;">
+        <a class="btn btn-ghost" href="/admin/analisis?days=7">7 días</a>
+        <a class="btn btn-ghost" href="/admin/analisis?days=30">30 días</a>
+        <a class="btn btn-ghost" href="/admin/analisis?days=90">90 días</a>
+    </div>
+</div>
+
+<!-- KPIs -->
+<div class="grid grid-3">
+    <div class="card kpi">
+        <div class="kpi-num">{{ total_ventas_cur }}</div>
+        <div class="kpi-label">N° de ventas</div>
+        <div class="kpi-sub muted small">Periodo actual</div>
+    </div>
+
+    <div class="card kpi">
+        <div class="kpi-num">{{ unidades_cur }}</div>
+        <div class="kpi-label">Unidades vendidas</div>
+        <div class="kpi-sub muted small">Periodo actual</div>
+    </div>
+
+    <div class="card kpi">
+        <div class="kpi-num">{{ ticket_prom_unidades }}</div>
+        <div class="kpi-label">Ticket promedio</div>
+        <div class="kpi-sub muted small">Unidades por venta</div>
+    </div>
+</div>
+
+<!-- Layout tipo Bsale: izquierda KPI extra / derecha gráfico -->
+<div class="grid grid-2" style="margin-top:16px;">
+    <div class="card">
+        <div class="card-h">
+            <div>
+                <div class="h1">Vista general</div>
+                <div class="muted small">Comparación periodo anterior vs actual</div>
+            </div>
+        </div>
+
+        <div class="card-b">
+            <div class="muted small" style="display:flex; gap:10px; align-items:center;">
+                <span style="display:inline-flex; gap:6px; align-items:center;">
+                    <span class="dot dot-a"></span> Periodo anterior
+                </span>
+                <span style="display:inline-flex; gap:6px; align-items:center;">
+                    <span class="dot dot-b"></span> Periodo actual
+                </span>
+            </div>
+
+            <div style="height:320px; margin-top:10px;">
+                <canvas id="ventasLine" data-labels='{{ labels | tojson }}' data-cur='{{ values_cur | tojson }}'
+                    data-prev='{{ values_prev | tojson }}'>
+                </canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-h">
+            <div>
+                <div class="h1">Ventas por sucursal</div>
+                <div class="muted small">Conteo de ventas</div>
+            </div>
+        </div>
+        <div class="card-b" style="height:320px;">
+            <canvas id="ventasDonut" data-labels='{{ donut_labels | tojson }}'
+                data-values='{{ donut_values | tojson }}'>
+            </canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Top productos -->
+<div class="card" style="margin-top:16px;">
+    <div class="card-h">
+        <div>
+            <div class="h1">Productos más vendidos</div>
+            <div class="muted small">Top por unidades</div>
+        </div>
+    </div>
+    <div class="card-b" style="height:320px;">
+        <canvas id="topProductos" data-labels='{{ top_labels | tojson }}' data-values='{{ top_values | tojson }}'>
+        </canvas>
+    </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Helper lectura data-*
+    const getJson = (el, name) => JSON.parse(el.getAttribute(name));
+
+    // Line (actual vs anterior)
+    const line = document.getElementById("ventasLine");
+    const lineLabels = JSON.parse(line.dataset.labels);
+    const cur = JSON.parse(line.dataset.cur);
+    const prev = JSON.parse(line.dataset.prev);
+
+    new Chart(line, {
+        type: "line",
+        data: {
+            labels: lineLabels,
+            datasets: [
+                { label: "Periodo anterior", data: prev, tension: 0.35, borderWidth: 2, pointRadius: 2 },
+                { label: "Periodo actual", data: cur, tension: 0.35, borderWidth: 3, pointRadius: 3 }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: "top" } },
+            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+        }
+    });
+
+    // Donut
+    const donut = document.getElementById("ventasDonut");
+    new Chart(donut, {
+        type: "doughnut",
+        data: {
+            labels: JSON.parse(donut.dataset.labels),
+            datasets: [{ data: JSON.parse(donut.dataset.values), borderWidth: 1 }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: "bottom" } } }
+    });
+
+    // Top productos
+    const top = document.getElementById("topProductos");
+    new Chart(top, {
+        type: "bar",
+        data: {
+            labels: JSON.parse(top.dataset.labels),
+            datasets: [{ label: "Unidades", data: JSON.parse(top.dataset.values), borderWidth: 1, borderRadius: 8 }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+        }
+    });
+</script>
+
+{% endblock %}

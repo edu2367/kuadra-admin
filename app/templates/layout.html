@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ app_name or "Sistema Vivero" }}</title>
+
+    <link rel="stylesheet" href="/static/app.css" />
+</head>
+
+<body>
+    <div class="app">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <a class="brand" href="/admin/dashboard">
+                <img src="/static/kuadra.svg" alt="KUADRA" class="brand-logo">
+                <div class="brand-text">
+                    <div class="brand-name">KUADRA</div>
+                    <div class="brand-sub">Panel Administrativo</div>
+                </div>
+            </a>
+        </aside>
+
+        <nav class="nav" id="nav">
+            <div class="nav-indicator" id="navIndicator"></div>
+
+            <a class="nav-item {% if active == 'dashboard' %}active{% endif %}" href="/admin/dashboard">
+                <span class="ico">▦</span><span>Resumen</span>
+            </a>
+
+            <a class="nav-item {% if active == 'productos' %}active{% endif %}" href="/admin/productos">
+                <span class="ico">✿</span><span>Productos</span>
+            </a>
+
+            <a class="nav-item {% if active == 'stock' %}active{% endif %}" href="/admin/stock">
+                <span class="ico">▣</span><span>Stock</span>
+            </a>
+
+            <div class="nav-indicator" id="navIndicator"></div>
+
+            <div class="nav-sep"></div>
+            <div class="nav-muted">Próximamente</div>
+
+            <a class="nav-item disabled" href="javascript:void(0)">
+                <span class="ico">＄</span><span>Ventas</span>
+                <span class="tag">pronto</span>
+            </a>
+
+            <a class="nav-item disabled" href="javascript:void(0)">
+                <span class="ico">◔</span><span>Análisis</span>
+                <span class="tag">pronto</span>
+            </a>
+
+            <a class="nav-item disabled" href="javascript:void(0)">
+                <span class="ico">⇩</span><span>Reportes Excel</span>
+                <span class="tag">pronto</span>
+            </a>
+        </nav>
+
+        <script>
+            (function () {
+                const nav = document.getElementById("nav");
+                const indicator = document.getElementById("navIndicator");
+                if (!nav || !indicator) return;
+
+                function move() {
+                    const active = nav.querySelector(".nav-item.active");
+                    if (!active) { indicator.style.opacity = "0"; return; }
+
+                    const top = active.offsetTop;
+                    const h = active.offsetHeight;
+
+                    indicator.style.opacity = "1";
+                    indicator.style.transform = `translateY(${top}px)`;
+                    indicator.style.height = `${h}px`;
+                }
+
+                window.addEventListener("load", move);
+                window.addEventListener("resize", move);
+                setTimeout(move, 50);
+            })();
+        </script>
+
+        <div class="sidebar-footer">
+            <div class="pill">Sistema Vivero</div>
+            <div class="muted">127.0.0.1</div>
+        </div>
+        </aside>
+
+        <!-- CONTENT -->
+        <main class="content">
+            <!-- TOPBAR -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <div class="page-title">{% block title %}{% endblock %}</div>
+                    <div class="page-sub">{% block subtitle %}{% endblock %}</div>
+                </div>
+
+                <div class="topbar-right">
+                    <div class="chip">Modo Admin</div>
+                </div>
+            </header>
+            <section class="page panel-content">
+                {% block content %}{% endblock %}
+            </section>
+
+        </main>
+    </div>
+    <script>
+        const nav = document.querySelector(".nav");
+        const indicator = document.getElementById("navIndicator");
+        const items = document.querySelectorAll(".nav-item");
+
+        function moveIndicator(el) {
+            const r = el.getBoundingClientRect();
+            const n = nav.getBoundingClientRect();
+            indicator.style.top = (r.top - n.top) + "px";
+            indicator.style.height = r.height + "px";
+            indicator.style.opacity = 1;
+        }
+
+        items.forEach(i => {
+            i.addEventListener("mouseenter", () => moveIndicator(i));
+        });
+
+        /* posición inicial en el activo */
+        const active = document.querySelector(".nav-item.active");
+        if (active) moveIndicator(active);
+    </script>
+</body>
+
+</html>

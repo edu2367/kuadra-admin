@@ -1,0 +1,75 @@
+{% extends "admin/layout.html" %}
+{% block content %}
+
+<div class="card">
+    <div class="card-h">
+        <div>
+            <div class="h1">Productos</div>
+            <div class="muted">Crea, edita precios y mantén tu catálogo ordenado.</div>
+        </div>
+        <span class="pill">{{ productos|length }} items</span>
+    </div>
+
+    <div class="card-b">
+        <form class="form-row" action="/admin/productos/crear" method="post">
+            <div class="field grow">
+                <label>Nombre</label>
+                <input class="input" name="nombre" placeholder="Ej: Sustrato premium 20L" required>
+            </div>
+
+            <div class="field">
+                <label>SKU</label>
+                <input class="input" name="sku" placeholder="Opcional">
+            </div>
+
+            <div class="field">
+                <label>Precio</label>
+                <input class="input" name="precio" placeholder="0" type="number" step="0.01">
+            </div>
+
+            <div class="field grow">
+                <label>Descripción</label>
+                <input class="input" name="descripcion" placeholder="Opcional">
+            </div>
+
+            <div class="field">
+                <label>&nbsp;</label>
+                <button class="btn" type="submit">Crear</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-b table-wrap">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="width:80px">ID</th>
+                    <th>Producto</th>
+                    <th style="width:180px">SKU</th>
+                    <th style="width:160px; text-align:right;">Precio</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in productos %}
+                <tr>
+                    <td class="muted">#{{ p.id }}</td>
+                    <td>
+                        <div class="t-title">{{ p.nombre }}</div>
+                        {% if p.descripcion %}
+                        <div class="t-sub muted">{{ p.descripcion }}</div>
+                        {% endif %}
+                    </td>
+                    <td class="muted">{{ p.sku or "-" }}</td>
+                    <td style="text-align:right; font-weight:800;">
+                        {{ "%.0f"|format(p.precio) }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

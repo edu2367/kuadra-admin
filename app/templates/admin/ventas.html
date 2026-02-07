@@ -1,0 +1,89 @@
+{% extends "admin/layout.html" %}
+{% block content %}
+
+<div class="dash-head">
+    <div>
+        <h2 class="dash-title">Ventas</h2>
+        <div class="muted small">Registrar venta y descontar stock</div>
+    </div>
+</div>
+
+<div class="grid grid-2">
+    <div class="card">
+        <div class="card-h">
+            <div>
+                <div class="h1">Nueva venta</div>
+                <div class="muted">MVP: 1 producto por venta</div>
+            </div>
+        </div>
+
+        <div class="card-b">
+            {% if request.query_params.get('err') == 'nostock' %}
+            <div class="pill" style="border-color:rgba(220,38,38,.25); background:rgba(220,38,38,.08); color:#991b1b;">
+                No hay stock suficiente
+            </div>
+            <div style="height:12px;"></div>
+            {% endif %}
+
+            <form method="post" action="/admin/ventas" class="row" style="display:flex; gap:14px; flex-wrap:wrap;">
+                <div class="field" style="min-width:260px;">
+                    <label>Sucursal</label>
+                    <select name="sucursal_id">
+                        {% for s in sucursales %}
+                        <option value="{{ s.id }}">{{ s.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="field" style="min-width:320px;">
+                    <label>Producto</label>
+                    <select name="producto_id">
+                        {% for p in productos %}
+                        <option value="{{ p.id }}">{{ p.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="field" style="width:140px;">
+                    <label>Cantidad</label>
+                    <input type="number" name="qty" value="1" min="1" />
+                </div>
+
+                <div class="field" style="align-self:end;">
+                    <button class="btn good" type="submit">Registrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-h">
+            <div>
+                <div class="h1">Últimas ventas</div>
+                <div class="muted">Listado rápido</div>
+            </div>
+        </div>
+        <div class="card-b table-wrap">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Sucursal</th>
+                        <th>Fecha</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for v in ventas %}
+                    <tr>
+                        <td>#{{ v.id }}</td>
+                        <td>{{ v.sucursal_id }}</td>
+                        <td class="muted">{{ v.created_at }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

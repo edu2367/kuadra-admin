@@ -1,0 +1,21 @@
+{% extends "admin/layout.html" %}
+{% block content %}
+
+<div class="dash-head">
+    <div>
+        <h2 class="dash-title">Reportes Excel</h2>
+        <div class="muted small">Descarga reportes en formato .xlsx</div>
+    </div>
+
+    <div class="dash-actions">
+        <a class="btn good" href="/admin/reportes/ventas.xlsx">📥 Descargar Ventas</a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-b">
+        <div class="muted">Tip: si aún no hay ventas registradas, el Excel saldrá vacío.</div>
+    </div>
+</div>
+
+{% endblock %}

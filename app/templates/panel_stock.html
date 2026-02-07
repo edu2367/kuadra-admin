@@ -1,0 +1,142 @@
+{% extends "panel_layout.html" %}
+{% block content %}
+
+<div class="grid">
+
+    <!-- Selector de sucursal + buscador -->
+    <div class="card">
+        <div class="card-h">
+            <div>
+                <h1>Stock</h1>
+                <div class="muted">Selecciona sucursal y ajusta stock con botones.</div>
+            </div>
+            <span class="pill">Sucursal ID: {{ sucursal_id or "-" }}</span>
+        </div>
+
+        <div class="card-b">
+            <div class="row" style="align-items:end">
+                <form method="get" action="/panel/stock"
+                    style="display:flex; gap:10px; flex-wrap:wrap; align-items:end;">
+                    <div class="field" style="min-width:320px">
+                        <label>Sucursal</label>
+                        <select class="select" name="sucursal_id" onchange="this.form.submit()">
+                            {% for s in sucursales %}
+                            <option value="{{ s.id }}" {% if s.id==sucursal_id %}selected{% endif %}>
+                                {{ s.nombre }}{% if s.direccion %} — {{ s.direccion }}{% endif %}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </form>
+
+                <div class="field" style="min-width:320px; flex:1">
+                    <label>Buscar producto</label>
+                    <input id="q" class="input" placeholder="Escribe para filtrar... (nombre o SKU)"
+                        oninput="filtrarProductos()">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla -->
+    <div class="card">
+        <div class="card-h">
+            <div class="muted">Productos</div>
+            <span class="pill"><span id="countVisibles"></span></span>
+        </div>
+
+        <div class="card-b">
+            <table class="table" id="tablaProductos">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th style="width:120px">Stock</th>
+                        <th style="width:420px">Ajustar</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for p in productos %}
+                    {% set qty = stock_map.get(p.id, 0) %}
+                    <tr class="fila-producto" data-text="{{ (p.nombre ~ ' ' ~ (p.sku or '')) | lower }}">
+                        <td>
+                            <div style="font-weight:800">{{ p.nombre }}</div>
+                            <div class="muted small">{{ p.sku or "" }}</div>
+                        </td>
+
+                        <td>
+                            <span class="stock-pill {% if qty <= 2 %}low{% endif %}">{{ qty }}</span>
+                            {% if qty <= 2 %} <div class="muted small" style="margin-top:6px;">⚠️ Bajo
+        </div>
+        {% endif %}
+        </td>
+
+        <td>
+            <div class="actions">
+                <!-- SUMAR -->
+                {% for d in [1,5,10] %}
+                <form action="/panel/stock/ajustar" method="post">
+                    <input type="hidden" name="sucursal_id" value="{{ sucursal_id }}">
+                    <input type="hidden" name="producto_id" value="{{ p.id }}">
+                    <input type="hidden" name="delta" value="{{ d }}">
+                    <button class="btn mini ok" type="submit">+{{ d }}</button>
+                </form>
+                {% endfor %}
+
+                <!-- RESTAR -->
+                {% for d in [1,5,10] %}
+                <form action="/panel/stock/ajustar" method="post">
+                    <input type="hidden" name="sucursal_id" value="{{ sucursal_id }}">
+                    <input type="hidden" name="producto_id" value="{{ p.id }}">
+                    <input type="hidden" name="delta" value="{{ -d }}">
+                    <button class="btn mini warn" type="submit">-{{ d }}</button>
+                </form>
+                {% endfor %}
+
+                <!-- Ajuste manual -->
+                <form action="/panel/stock/ajustar" method="post" class="manual">
+                    <input type="hidden" name="sucursal_id" value="{{ sucursal_id }}">
+                    <input type="hidden" name="producto_id" value="{{ p.id }}">
+                    <input class="input manual-input" type="number" name="delta" value="0" step="1">
+                    <button class="btn mini secondary" type="submit">Aplicar</button>
+                </form>
+            </div>
+        </td>
+        </tr>
+        {% endfor %}
+
+        {% if productos|length == 0 %}
+        <tr>
+            <td colspan="3" class="muted">Primero crea productos en “Productos”.</td>
+        </tr>
+        {% endif %}
+        </tbody>
+        </table>
+    </div>
+</div>
+
+</div>
+
+<script>
+    function filtrarProductos() {
+        const q = (document.getElementById("q").value || "").toLowerCase().trim();
+        const filas = document.querySelectorAll(".fila-producto");
+        let visibles = 0;
+
+        filas.forEach(f => {
+            const txt = f.getAttribute("data-text") || "";
+            const ok = txt.includes(q);
+            f.style.display = ok ? "" : "none";
+            if (ok) visibles++;
+        });
+
+        const count = document.getElementById("countVisibles");
+        if (count) count.textContent = visibles + " visibles";
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        filtrarProductos();
+    });
+</script>
+
+{% endblock %}

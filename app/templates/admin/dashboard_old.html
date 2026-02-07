@@ -1,0 +1,121 @@
+{% extends "admin/layout.html" %}
+{% block content %}
+
+<div class="dash-head">
+    <div>
+        <div class="muted small">Estado general + alertas</div>
+    </div>
+
+    <div class="dash-actions">
+        <a class="btn good" href="/admin/stock">
+            <span class="ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                    <path d="M4 7h16M4 12h16M4 17h10" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                </svg>
+            </span>
+            Revisar stock
+        </a>
+
+        <a class="btn good" href="/admin/productos">
+            <span class="ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2l4 7H8l4-7zm-7 9h14v11H5V11z" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linejoin="round" />
+                </svg>
+            </span>
+            Productos
+        </a>
+    </div>
+</div>
+
+<!-- KPIs -->
+<div class="grid grid-3">
+    <div class="card kpi">
+        <div class="kpi-num">{{ total_productos }}</div>
+        <div class="kpi-label">Productos registrados</div>
+    </div>
+
+    <div class="card kpi">
+        <div class="kpi-num">{{ total_sucursales }}</div>
+        <div class="kpi-label">Sucursales activas</div>
+    </div>
+
+    <div class="card kpi">
+        <div class="kpi-num">{{ total_registros_stock }}</div>
+        <div class="kpi-label">Registros de stock</div>
+    </div>
+</div>
+
+<div style="height:14px"></div>
+
+<div class="grid grid-2">
+    <div class="card">
+        <div class="card-h">
+            <div>
+                <div style="font-weight:900">Alertas de stock</div>
+                <div class="muted small">Lo que necesita atención</div>
+            </div>
+            <span class="pill">Hoy</span>
+        </div>
+
+        <div class="card-b">
+            <div class="alert-row">
+                <span class="dot red"></span>
+                <div class="alert-txt">
+                    <div class="alert-title">Sin stock</div>
+                    <div class="muted small">{{ sin_stock or 0 }} productos</div>
+                </div>
+                <a class="link" href="/admin/stock">Ver</a>
+            </div>
+
+            <div class="alert-row">
+                <span class="dot yellow"></span>
+                <div class="alert-txt">
+                    <div class="alert-title">Stock bajo</div>
+                    <div class="muted small">{{ bajo_stock or 0 }} productos</div>
+                </div>
+                <a class="link" href="/admin/stock">Ver</a>
+            </div>
+
+            <div class="alert-row">
+                <span class="dot green"></span>
+                <div class="alert-txt">
+                    <div class="alert-title">Stock OK</div>
+                    <div class="muted small">{{ ok_stock or 0 }} productos</div>
+                </div>
+                <a class="link" href="/admin/stock">Ver</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-h">
+            <div>
+                <div style="font-weight:900">Productos clave</div>
+                <div class="muted small">Qué empujar / qué revisar</div>
+            </div>
+            <span class="pill">Semana</span>
+        </div>
+
+        <div class="card-b">
+            <div class="top-row">
+                <div>
+                    <div class="muted small">Producto estrella</div>
+                    <div class="top-title">{{ top_vendido or "—" }}</div>
+                </div>
+                <span class="badge good">+ vendido</span>
+            </div>
+
+            <div class="top-row">
+                <div>
+                    <div class="muted small">Menos vendido</div>
+                    <div class="top-title">{{ menos_vendido or "—" }}</div>
+                </div>
+                <span class="badge ghost">bajo</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
