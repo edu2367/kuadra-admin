@@ -31,6 +31,8 @@
             <img src="/static/kuadra-logo.svg?v=3" alt="KUADRA" class="brand-logo">
             <div class="brand-sub">Panel Admin</div>
         </div>
+        <div class="nav-sep"></div>
+
 
         <nav class="nav">
             <a class="nav-item {% if active=='dashboard' %}active{% endif %}" href="/admin/dashboard">
@@ -63,6 +65,12 @@
             <a class="nav-item {% if active=='reportes' %}active{% endif %}" href="/admin/reportes">
                 <span class="ico">📄</span>
                 <span>Reportes Excel</span>
+            </a>
+            <div class="nav-sep"></div>
+
+            <a class="nav-item logout" href="/auth/logout">
+                <span class="ico">🚪</span>
+                <span>Cerrar sesión</span>
             </a>
         </nav>
 

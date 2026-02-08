@@ -115,3 +115,16 @@ body.app {
 .logout:hover {
     background: #334155;
 }
+
+.nav-item.logout {
+    margin-top: 8px;
+    color: #ffdddd;
+}
+
+.nav-item.logout:hover {
+    background: rgba(255, 80, 80, 0.12);
+}
+
+.nav-item.logout .ico {
+    opacity: 1;
+}
