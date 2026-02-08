@@ -18,48 +18,45 @@
         </div>
 
         <nav class="nav">
-            <a class="nav-item {% if active=='dashboard' %}active{% endif %}" href="/panel/dashboard">
-                <span class="ico" aria-hidden="true">▦</span>
+
+            <a class="nav-item {% if active == 'dashboard' %}active{% endif %}" href="/admin/dashboard">
+                <span class="ico">📊</span>
                 <span>Resumen</span>
             </a>
 
-            <a class="nav-item {% if active=='productos' %}active{% endif %}" href="/panel/productos">
-                <span class="ico" aria-hidden="true">⌁</span>
+            <a class="nav-item {% if active == 'productos' %}active{% endif %}" href="/admin/productos">
+                <span class="ico">🪴</span>
                 <span>Productos</span>
             </a>
 
-            <a class="nav-item {% if active=='stock' %}active{% endif %}" href="/panel/stock">
-                <span class="ico" aria-hidden="true">⬚</span>
+            <a class="nav-item {% if active == 'stock' %}active{% endif %}" href="/admin/stock">
+                <span class="ico">📦</span>
                 <span>Stock</span>
+            </a>
+
+            <a class="nav-item {% if active == 'ventas' %}active{% endif %}" href="/admin/ventas">
+                <span class="ico">💰</span>
+                <span>Ventas</span>
+            </a>
+
+            <a class="nav-item {% if active == 'analisis' %}active{% endif %}" href="/admin/analisis">
+                <span class="ico">📈</span>
+                <span>Análisis</span>
+            </a>
+
+            <a class="nav-item {% if active == 'reportes' %}active{% endif %}" href="/admin/reportes">
+                <span class="ico">📄</span>
+                <span>Reportes Excel</span>
             </a>
 
             <div class="nav-sep"></div>
 
-            <a class="nav-item disabled" href="#" tabindex="-1" aria-disabled="true">
-                <span class="ico" aria-hidden="true">◎</span>
-                <span>Ventas</span>
-                <span class="tag">pronto</span>
+            <a class="nav-item logout" href="/auth/logout">
+                <span class="ico">🚪</span>
+                <span>Cerrar sesión</span>
             </a>
 
-            <a class="nav-item disabled" href="#" tabindex="-1" aria-disabled="true">
-                <span class="ico" aria-hidden="true">◔</span>
-                <span>Análisis</span>
-                <span class="tag">pronto</span>
-            </a>
-
-            <a class="nav-item disabled" href="#" tabindex="-1" aria-disabled="true">
-                <span class="ico" aria-hidden="true">⇩</span>
-                <span>Reportes Excel</span>
-                <span class="tag">pronto</span>
-            </a>
         </nav>
-
-        <div class="nav-sep"></div>
-
-        <a class="nav-item logout" href="/auth/logout">
-            <span class="ico">🚪</span>
-            <span>Cerrar sesión</span>
-        </a>
 
         <div class="sidebar-footer">
             <div class="tiny">Frutales Verde Limón</div>
