@@ -12,54 +12,53 @@
 <body class="app">
 
     <aside class="sidebar">
+
         <div class="brand">
-            <img class="brand-logo" src="/static/logo_frutales.svg" alt="Frutales Verde Limón">
-            <div class="brand-sub">Panel de gestión</div>
+            <img class="brand-logo" src="/static/kuadra-logo.svg" alt="Kuadra">
+            <div class="brand-sub">Panel Admin</div>
         </div>
 
         <nav class="nav">
-
-            <a class="nav-item {% if active == 'dashboard' %}active{% endif %}" href="/admin/dashboard">
+            <a class="nav-item" href="/admin/dashboard">
                 <span class="ico">📊</span>
-                <span>Resumen</span>
+                Resumen
             </a>
 
-            <a class="nav-item {% if active == 'productos' %}active{% endif %}" href="/admin/productos">
+            <a class="nav-item active" href="/admin/productos">
                 <span class="ico">🪴</span>
-                <span>Productos</span>
+                Productos
             </a>
 
-            <a class="nav-item {% if active == 'stock' %}active{% endif %}" href="/admin/stock">
+            <a class="nav-item" href="/admin/stock">
                 <span class="ico">📦</span>
-                <span>Stock</span>
+                Stock
             </a>
 
-            <a class="nav-item {% if active == 'ventas' %}active{% endif %}" href="/admin/ventas">
+            <a class="nav-item" href="/admin/ventas">
                 <span class="ico">💰</span>
-                <span>Ventas</span>
+                Ventas
             </a>
 
-            <a class="nav-item {% if active == 'analisis' %}active{% endif %}" href="/admin/analisis">
+            <a class="nav-item" href="/admin/analisis">
                 <span class="ico">📈</span>
-                <span>Análisis</span>
+                Análisis
             </a>
 
-            <a class="nav-item {% if active == 'reportes' %}active{% endif %}" href="/admin/reportes">
+            <a class="nav-item" href="/admin/reportes">
                 <span class="ico">📄</span>
-                <span>Reportes Excel</span>
+                Reportes Excel
             </a>
 
             <div class="nav-sep"></div>
 
             <a class="nav-item logout" href="/auth/logout">
                 <span class="ico">🚪</span>
-                <span>Cerrar sesión</span>
+                Cerrar sesión
             </a>
-
         </nav>
 
         <div class="sidebar-footer">
             <div class="tiny">Frutales Verde Limón</div>
-            <div class="tiny muted">{{ request.client.host }}</div>
         </div>
+
     </aside>
