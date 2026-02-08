@@ -7,3 +7,4 @@ jinja2
 python-multipart
 pydantic-settings
 openpyxl
+passlib[bcrypt]
