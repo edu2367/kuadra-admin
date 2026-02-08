@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>KUADRA | Acceso</title>
+    <link rel="stylesheet" href="/static/css/auth.css">
+</head>
+
+<body>
+    <main class="wrap">
+        <section class="hero">
+            <div class="brand">
+                <div class="logo">K</div>
+                <div>
+                    <div class="brand-name">KUADRA</div>
+                    <div class="brand-sub">Panel de administración</div>
+                </div>
+            </div>
+
+            <h1 class="title">Control total en segundos.</h1>
+            <p class="subtitle">
+                Stock, productos y movimientos en un solo lugar. Ordena el negocio y evita errores.
+            </p>
+
+            <ul class="bullets">
+                <li>✅ Acceso rápido y seguro</li>
+                <li>✅ Todo centralizado</li>
+                <li>✅ Listo para operar desde cualquier lugar</li>
+            </ul>
+
+            <div class="footnote">© {{ year }} KUADRA</div>
+        </section>
+
+        <section class="card">
+            {% block content %}{% endblock %}
+        </section>
+    </main>
+</body>
+
+</html>
