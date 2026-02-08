@@ -27,6 +27,12 @@ from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
 import json
 
+
+def require_login(request: Request):
+    if not request.session.get("user"):
+        return RedirectResponse("/auth/login", status_code=302)
+
+
 router = APIRouter(prefix="/admin", tags=["Admin"])
 templates = Jinja2Templates(directory="app/templates")
 
@@ -40,6 +46,7 @@ def admin_home():
 def admin_dashboard(
     request: Request,
     db: Session = Depends(get_db),
+    _: None = Depends(require_login),
     sucursal_id: int | None = None,
     days: int = 7,
 ):
@@ -118,7 +125,11 @@ def admin_dashboard(
 
 
 @router.get("/productos")
-def admin_productos(request: Request, db: Session = Depends(get_db)):
+def admin_productos(
+    request: Request,
+    db: Session = Depends(get_db),
+    _: None = Depends(require_login),
+):
     productos = db.query(Producto).order_by(Producto.id.desc()).all()
 
     return templates.TemplateResponse(

@@ -1,19 +1,35 @@
-from fastapi import APIRouter, Request
-from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
+from fastapi import APIRouter, Request, Form
 from fastapi.responses import RedirectResponse
+from fastapi.templating import Jinja2Templates
 
-router = APIRouter()
+router = APIRouter(prefix="/auth")
 templates = Jinja2Templates(directory="app/templates")
 
 
-@router.get("/login", response_class=HTMLResponse)
-async def login_page(request: Request):
-    return templates.TemplateResponse("auth/login.html", {"request": request})
+# 👉 LOGIN (GET)
+@router.get("/login")
+def login_page(request: Request):
+    return templates.TemplateResponse("admin/login.html", {"request": request})
 
 
+# 👉 LOGIN (POST)
+@router.post("/login")
+def login_action(
+    request: Request, username: str = Form(...), password: str = Form(...)
+):
+    # login simple por ahora
+    if username == "admin" and password == "1234":
+        request.session["user"] = "admin"  # 🔥 SESIÓN REAL
+        return RedirectResponse("/admin/dashboard", status_code=302)
+
+    return templates.TemplateResponse(
+        "admin/login.html", {"request": request, "error": "Credenciales incorrectas"}
+    )
+
+
+# 👉 LOGOUT
 @router.get("/logout")
-async def logout(request: Request):
-    response = RedirectResponse(url="/login", status_code=302)
+def logout():
+    response = RedirectResponse("/auth/login", status_code=302)
     response.delete_cookie("session")
     return response
