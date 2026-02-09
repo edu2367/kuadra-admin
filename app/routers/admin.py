@@ -46,7 +46,6 @@ def admin_home():
 def admin_dashboard(
     request: Request,
     db: Session = Depends(get_db),
-    _: None = Depends(require_login),
     sucursal_id: int | None = None,
     days: int = 7,
 ):
@@ -128,7 +127,6 @@ def admin_dashboard(
 def admin_productos(
     request: Request,
     db: Session = Depends(get_db),
-    _: None = Depends(require_login),
 ):
     productos = db.query(Producto).order_by(Producto.id.desc()).all()
 

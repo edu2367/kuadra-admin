@@ -5,6 +5,7 @@ psycopg2-binary
 alembic
 jinja2
 python-multipart
+itsdangerous
 pydantic-settings
 openpyxl
 passlib[bcrypt]

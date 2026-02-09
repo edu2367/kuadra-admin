@@ -128,3 +128,113 @@ body.app {
 .nav-item.logout .ico {
     opacity: 1;
 }
+
+.sidebar-logo {
+    padding: 16px;
+    text-align: center;
+}
+
+.sidebar-logo img {
+    max-width: 140px;
+    opacity: 0.9;
+}
+
+.brand {
+    padding: 18px;
+    text-align: center;
+}
+
+.brand-logo {
+    max-width: 120px;
+    margin-bottom: 6px;
+}
+
+.brand-sub {
+    font-size: 12px;
+    opacity: 0.6;
+}
+
+.brand {
+    padding: 20px 12px 10px;
+    text-align: center;
+}
+
+.brand-logo {
+    width: 110px;
+    max-width: 100%;
+    opacity: 0.95;
+}
+
+.brand-sub {
+    font-size: 12px;
+    opacity: 0.6;
+    margin-top: 6px;
+}
+
+/* ===== FIX LOGO KUADRA ===== */
+.sidebar .brand {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 16px 12px;
+}
+
+.sidebar .brand-logo {
+    display: block !important;
+    width: 120px !important;
+    height: auto !important;
+    max-height: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.sidebar .brand-sub {
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+.brand {
+    padding: 16px 12px;
+    text-align: center;
+}
+
+.brand-logo {
+    width: 120px;
+    height: auto;
+}
+
+.brand-sub {
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+.brand {
+    padding: 16px;
+    text-align: center;
+}
+
+.brand-logo {
+    width: 120px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+.brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px 12px;
+}
+
+.brand-logo {
+    max-width: 120px;
+    height: auto;
+    margin-bottom: 6px;
+}
+
+.brand-sub {
+    font-size: 12px;
+    opacity: 0.7;
+}
