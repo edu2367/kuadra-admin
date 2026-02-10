@@ -160,3 +160,12 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+/* === Ajuste logo KUADRA === */
+.logo svg {
+    fill: #FFFFFF;
+}
+
+.brand-name {
+    color: #E5E7EB;
+}
