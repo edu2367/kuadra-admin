@@ -14,7 +14,7 @@ templates = Jinja2Templates(directory="app/templates")
 
 @router.get("/login")
 def login_page(request: Request):
-    return templates.TemplateResponse("admin/login.html", {"request": request})
+    return templates.TemplateResponse("auth/login.html", {"request": request})
 
 
 @router.post("/login")
@@ -41,7 +41,7 @@ def login_action(
 
 @router.get("/register")
 def register_page(request: Request):
-    return templates.TemplateResponse("admin/register.html", {"request": request})
+    return templates.TemplateResponse("auth/register.html", {"request": request})
 
 
 @router.post("/register")
@@ -56,14 +56,14 @@ def register_action(
 
     if password != password2:
         return templates.TemplateResponse(
-            "admin/register.html",
+            "auth/register.html",
             {"request": request, "error": "Las contraseñas no coinciden"},
         )
 
     exists = db.query(User).filter(User.username == email).first()
     if exists:
         return templates.TemplateResponse(
-            "admin/register.html",
+            "auth/register.html",
             {"request": request, "error": "Ese correo ya está registrado"},
         )
 
@@ -88,7 +88,7 @@ def register_action(
 def recuperar_page(request: Request):
     # placeholder simple para mañana (después lo hacemos bien con email)
     return templates.TemplateResponse(
-        "admin/login.html",
+        "auth/login.html",
         {"request": request, "error": "Recuperación: mañana lo dejamos con email 😉"},
     )
 
