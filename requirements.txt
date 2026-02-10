@@ -8,4 +8,6 @@ python-multipart
 itsdangerous
 pydantic-settings
 openpyxl
+
 passlib[bcrypt]
+bcrypt
