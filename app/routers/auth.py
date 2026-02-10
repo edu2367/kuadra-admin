@@ -12,6 +12,9 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 templates = Jinja2Templates(directory="app/templates")
 
 
+# -------------------------
+# LOGIN
+# -------------------------
 @router.get("/login")
 def login_page(request: Request):
     return templates.TemplateResponse("auth/login.html", {"request": request})
@@ -20,15 +23,17 @@ def login_page(request: Request):
 @router.post("/login")
 def login_action(
     request: Request,
-    username: str = Form(...),
+    username: str = Form(...),  # en tu login lo usas como "username" (correo)
     password: str = Form(...),
     db: Session = Depends(get_db),
 ):
-    user = db.query(User).filter(User.username == username).first()
+    email = username.strip().lower()
+
+    user = db.query(User).filter(User.username == email).first()
 
     if not user or not verify_password(password, user.password_hash):
         return templates.TemplateResponse(
-            "admin/login.html",
+            "auth/login.html",
             {"request": request, "error": "Credenciales incorrectas"},
         )
 
@@ -39,6 +44,18 @@ def login_action(
     return RedirectResponse("/admin/dashboard", status_code=302)
 
 
+# -------------------------
+# LOGOUT
+# -------------------------
+@router.get("/logout")
+def logout(request: Request):
+    request.session.clear()
+    return RedirectResponse("/auth/login", status_code=302)
+
+
+# -------------------------
+# REGISTER
+# -------------------------
 @router.get("/register")
 def register_page(request: Request):
     return templates.TemplateResponse("auth/register.html", {"request": request})
@@ -76,7 +93,7 @@ def register_action(
     db.commit()
     db.refresh(new_user)
 
-    # auto-login opcional (queda más cómodo)
+    # auto-login
     request.session["user_id"] = new_user.id
     request.session["user_email"] = new_user.username
     request.session["is_admin"] = bool(new_user.is_admin)
@@ -84,16 +101,10 @@ def register_action(
     return RedirectResponse("/admin/dashboard", status_code=302)
 
 
+# -------------------------
+# RECUPERAR (stub simple)
+# -------------------------
 @router.get("/recuperar")
 def recuperar_page(request: Request):
-    # placeholder simple para mañana (después lo hacemos bien con email)
-    return templates.TemplateResponse(
-        "auth/login.html",
-        {"request": request, "error": "Recuperación: mañana lo dejamos con email 😉"},
-    )
-
-
-@router.get("/logout")
-def logout(request: Request):
-    request.session.clear()
-    return RedirectResponse("/auth/login", status_code=302)
+    # por ahora solo muestra una pantalla (si no la tienes, créala o redirige al login)
+    return templates.TemplateResponse("auth/recuperar.html", {"request": request})
