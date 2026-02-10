@@ -57,6 +57,9 @@ def register_page(request: Request):
 @router.post("/register")
 def register_action(
     request: Request,
+    first_name: str = Form(...),
+    last_name: str = Form(...),
+    phone: str = Form(None),
     email: str = Form(...),
     password: str = Form(...),
     password2: str = Form(...),

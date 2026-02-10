@@ -25,25 +25,36 @@
             <form method="post">
 
                 <div class="field">
+                    <label>Nombre</label>
+                    <input type="text" name="first_name" placeholder="Nombre" required>
+                </div>
+
+                <div class="field">
+                    <label>Apellido</label>
+                    <input type="text" name="last_name" placeholder="Apellido" required>
+                </div>
+
+                <div class="field">
+                    <label>Teléfono</label>
+                    <input type="tel" name="phone" placeholder="+56 9 1234 5678">
+                </div>
+
+                <div class="field">
                     <label>Correo</label>
                     <input type="email" name="email" placeholder="correo@ejemplo.com" required>
                 </div>
 
                 <div class="field">
                     <label>Contraseña</label>
-                    <input type="password" name="password" placeholder="••••••••" required>
+                    <input type="password" name="password" placeholder="••••••••" maxlength="64" required>
                 </div>
 
                 <div class="field">
                     <label>Repetir contraseña</label>
-                    <input type="password" name="password2" placeholder="••••••••" required>
+                    <input type="password" name="password2" placeholder="••••••••" maxlength="64" required>
                 </div>
 
                 <button class="btn" type="submit">Crear cuenta</button>
-
-                <div class="help">
-                    ¿Ya tienes cuenta? <a href="/auth/login">Iniciar sesión</a>
-                </div>
 
             </form>
 
