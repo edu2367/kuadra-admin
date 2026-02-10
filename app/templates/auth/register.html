@@ -5,7 +5,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>KUADRA | Crear cuenta</title>
-    <link rel="stylesheet" href="/static/admin.css" />
+
+    <link rel="stylesheet" href="/static/auth.css" />
 </head>
 
 <body>
@@ -24,19 +25,21 @@
 
             <form method="post">
 
-                <div class="field">
-                    <label>Nombre</label>
-                    <input type="text" name="first_name" placeholder="Nombre" required>
-                </div>
+                <div class="grid-2">
+                    <div class="field">
+                        <label>Nombre</label>
+                        <input type="text" name="first_name" placeholder="Nombre" required>
+                    </div>
 
-                <div class="field">
-                    <label>Apellido</label>
-                    <input type="text" name="last_name" placeholder="Apellido" required>
+                    <div class="field">
+                        <label>Apellido</label>
+                        <input type="text" name="last_name" placeholder="Apellido" required>
+                    </div>
                 </div>
 
                 <div class="field">
                     <label>Teléfono</label>
-                    <input type="tel" name="phone" placeholder="+56 9 1234 5678">
+                    <input type="text" name="phone" placeholder="+56 9 1234 5678">
                 </div>
 
                 <div class="field">
@@ -56,6 +59,9 @@
 
                 <button class="btn" type="submit">Crear cuenta</button>
 
+                <div class="help">
+                    ¿Ya tienes cuenta? <a href="/auth/login">Iniciar sesión</a>
+                </div>
             </form>
 
         </div>
