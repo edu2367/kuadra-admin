@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from app.db import get_db
 from app.models.user import User
-from app.security import verify_password
+from app.security import hash_password, verify_password
 
 router = APIRouter(prefix="/auth")
 templates = Jinja2Templates(directory="app/templates")

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>KUADRA | Crear cuenta</title>
+    <link rel="stylesheet" href="/static/admin.css" />
+</head>
+
+<body>
+    <div class="auth-wrap">
+        <div class="auth-card">
+            <div class="login-brand">
+                <img src="/static/logo.svg" alt="KUADRA">
+            </div>
+
+            <h2 style="text-align:center;color:#fff;margin:0 0 10px;">Crear cuenta</h2>
+
+            {% if error %}
+            <div class="err">{{ error }}</div>
+            {% endif %}
+
+            <form method="post">
+                <div class="field">
+                    <label>Correo</label>
+                    <input type="email" name="email" required>
+                </div>
+
+                <div class="field">
+                    <label>Contraseña</label>
+                    <input type="password" name="password" required minlength="6">
+                </div>
+
+                <button class="btn" type="submit">Crear cuenta</button>
+            </form>
+
+            <div class="auth-foot">
+                ¿Ya tienes cuenta? <a href="/auth/login">Iniciar sesión</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
