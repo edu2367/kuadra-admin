@@ -10,11 +10,10 @@ from app.routers import reportes
 from app.routers import auth
 
 from app.db import engine, Base
-import app.models
+from app.models.user import User  # 👈 Importa el modelo para registrar la tabla
 
-# Crear tablas automáticamente solo en desarrollo por conveniencia.
-if os.getenv("ENV", "development") != "production":
-    Base.metadata.create_all(bind=engine)
+# Crear tablas automáticamente al iniciar la app (en cualquier entorno)
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="KUADRA - frutales verde limon")
 
@@ -31,14 +30,18 @@ if REDIS_URL:
         # Fallback a cookie-based sessions
         app.add_middleware(
             SessionMiddleware,
-            secret_key=os.getenv("SESSION_SECRET", "CAMBIA_ESTE_SECRET_LARGO_Y_RANDOM_123456789"),
+            secret_key=os.getenv(
+                "SESSION_SECRET", "CAMBIA_ESTE_SECRET_LARGO_Y_RANDOM_123456789"
+            ),
             same_site="lax",
             https_only=(os.getenv("ENV", "development") == "production"),
         )
 else:
     app.add_middleware(
         SessionMiddleware,
-        secret_key=os.getenv("SESSION_SECRET", "CAMBIA_ESTE_SECRET_LARGO_Y_RANDOM_123456789"),
+        secret_key=os.getenv(
+            "SESSION_SECRET", "CAMBIA_ESTE_SECRET_LARGO_Y_RANDOM_123456789"
+        ),
         same_site="lax",
         https_only=(os.getenv("ENV", "development") == "production"),
     )
@@ -86,6 +89,7 @@ async def ensure_csrf_token(request, call_next):
 
     response = await call_next(request)
     return response
+
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
