@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
 from starlette.middleware.sessions import SessionMiddleware
+import importlib
 import os
 
 from app.routers import admin
@@ -16,12 +17,31 @@ if os.getenv("ENV", "development") != "production":
     Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="KUADRA - frutales verde limon")
-app.add_middleware(
-    SessionMiddleware,
-    secret_key=os.getenv("SESSION_SECRET", "CAMBIA_ESTE_SECRET_LARGO_Y_RANDOM_123456789"),
-    same_site="lax",
-    https_only=(os.getenv("ENV", "development") == "production"),
-)
+
+# Si está configurado REDIS_URL usaremos sesiones server-side con Redis
+REDIS_URL = os.getenv("REDIS_URL")
+if REDIS_URL:
+    try:
+        import redis
+        from app.session_redis import RedisSessionMiddleware
+
+        r = redis.from_url(REDIS_URL, decode_responses=True)
+        app.add_middleware(RedisSessionMiddleware, redis_client=r)
+    except Exception:
+        # Fallback a cookie-based sessions
+        app.add_middleware(
+            SessionMiddleware,
+            secret_key=os.getenv("SESSION_SECRET", "CAMBIA_ESTE_SECRET_LARGO_Y_RANDOM_123456789"),
+            same_site="lax",
+            https_only=(os.getenv("ENV", "development") == "production"),
+        )
+else:
+    app.add_middleware(
+        SessionMiddleware,
+        secret_key=os.getenv("SESSION_SECRET", "CAMBIA_ESTE_SECRET_LARGO_Y_RANDOM_123456789"),
+        same_site="lax",
+        https_only=(os.getenv("ENV", "development") == "production"),
+    )
 
 
 # Middleware para proteger áreas administrativas y de panel
@@ -35,12 +55,17 @@ async def protect_admin_panel(request, call_next):
         if any(path.startswith(p) for p in public_prefixes):
             return await call_next(request)
 
-        user_id = request.session.get("user_id")
+        try:
+            sess = request.session
+        except Exception:
+            return RedirectResponse(url="/auth/login", status_code=302)
+
+        user_id = sess.get("user_id")
         if not user_id:
             return RedirectResponse(url="/auth/login", status_code=302)
 
         # Para rutas /admin, verificar rol de admin
-        if path.startswith("/admin") and not bool(request.session.get("is_admin", False)):
+        if path.startswith("/admin") and not bool(sess.get("is_admin", False)):
             return RedirectResponse(url="/auth/login", status_code=302)
 
     return await call_next(request)
@@ -51,8 +76,13 @@ async def ensure_csrf_token(request, call_next):
     # Ensure every session has a CSRF token for forms
     import secrets
 
-    if "csrf_token" not in request.session:
-        request.session["csrf_token"] = secrets.token_urlsafe(32)
+    try:
+        sess = request.session
+    except Exception:
+        return await call_next(request)
+
+    if "csrf_token" not in sess:
+        sess["csrf_token"] = secrets.token_urlsafe(32)
 
     response = await call_next(request)
     return response
