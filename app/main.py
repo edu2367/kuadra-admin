@@ -11,16 +11,16 @@ from app.routers import auth
 from app.db import engine, Base
 import app.models
 
-Base.metadata.create_all(bind=engine)
+# Crear tablas automáticamente solo en desarrollo por conveniencia.
+if os.getenv("ENV", "development") != "production":
+    Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="KUADRA - frutales verde limon")
 app.add_middleware(
     SessionMiddleware,
-    secret_key=os.getenv(
-        "SESSION_SECRET", "CAMBIA_ESTE_SECRET_LARGO_Y_RANDOM_123456789"
-    ),
+    secret_key=os.getenv("SESSION_SECRET", "CAMBIA_ESTE_SECRET_LARGO_Y_RANDOM_123456789"),
     same_site="lax",
-    https_only=False,  # en producción con https ponlo True
+    https_only=(os.getenv("ENV", "development") == "production"),
 )
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")

@@ -33,7 +33,7 @@ def require_login(request: Request):
         return RedirectResponse("/auth/login", status_code=302)
 
 
-router = APIRouter(prefix="/admin", tags=["Admin"])
+router = APIRouter(prefix="/admin", tags=["Admin"], dependencies=[])
 templates = Jinja2Templates(directory="app/templates")
 
 

@@ -1,0 +1,9 @@
+.venv/
+venv/
+__pycache__/
+*.pyc
+.env
+backups/
+*.sqlite
+.DS_Store
+reports/kuadra_review.pdf
