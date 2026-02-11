@@ -12,6 +12,11 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 templates = Jinja2Templates(directory="app/templates")
 
 
+@router.get("/")
+def auth_root():
+    return RedirectResponse("/auth/login", status_code=302)
+
+
 # ---------- LOGIN ----------
 @router.get("/login")
 def login_page(request: Request):
