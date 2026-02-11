@@ -65,11 +65,39 @@ def logout(request: Request):
     request.session.clear()
     return RedirectResponse("/auth/login", status_code=302)
 
-
 # ---------- RECOVER ----------
 @router.get("/recover")
 def recover_page(request: Request):
     return templates.TemplateResponse("auth/recover.html", {"request": request})
+
+
+# 👉 Pega este bloque justo aquí, debajo del GET
+from fastapi import Form
+
+
+@router.post("/recover")
+def recover_action(
+    request: Request,
+    email: str = Form(...),
+    db: Session = Depends(get_db),
+):
+    user = db.query(User).filter(User.username == email.strip().lower()).first()
+    if not user:
+        return templates.TemplateResponse(
+            "auth/recover.html",
+            {"request": request, "error": "No existe un usuario con ese correo"},
+            status_code=400,
+        )
+
+    # Aquí más adelante puedes generar un token y enviar un correo real.
+    # Por ahora mostramos un mensaje de confirmación.
+    return templates.TemplateResponse(
+        "auth/recover.html",
+        {
+            "request": request,
+            "msg": "Se ha enviado un enlace de recuperación a tu correo",
+        },
+    )
 
 
 # ---------- REGISTER ----------
