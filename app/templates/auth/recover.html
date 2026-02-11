@@ -3,22 +3,40 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Recuperar contraseña</title>
+    <title>KUADRA | Recuperar contraseña</title>
+    <link rel="stylesheet" href="/static/auth.css" />
 </head>
 
 <body>
-    <h2>Recuperar contraseña</h2>
-    {% if error %}
-    <div class="err">{{ error }}</div>
-    {% endif %}
-    {% if msg %}
-    <div class="msg">{{ msg }}</div>
-    {% endif %}
-    <form method="post" action="/auth/recover">
-        <label for="email">Correo electrónico:</label>
-        <input type="email" id="email" name="email" required>
-        <button type="submit">Enviar enlace de recuperación</button>
-    </form>
+    <div class="auth-wrap">
+        <div class="auth-card">
+            <div class="login-brand">
+                <img src="/static/logo.svg" alt="KUADRA">
+            </div>
+
+            <div class="login-title">Recuperar contraseña</div>
+
+            {% if error %}
+            <div class="err">{{ error }}</div>
+            {% endif %}
+            {% if msg %}
+            <div class="msg">{{ msg }}</div>
+            {% endif %}
+
+            <form method="post" action="/auth/recover">
+                <div class="field">
+                    <label for="email">Correo electrónico</label>
+                    <input type="email" id="email" name="email" placeholder="correo@ejemplo.com" required>
+                </div>
+                <button class="btn" type="submit">Enviar enlace de recuperación</button>
+            </form>
+
+            <div class="extra-links">
+                <a href="/auth/register">Crear cuenta</a> |
+                <a href="/auth/login">Volver a iniciar sesión</a>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
