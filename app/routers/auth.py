@@ -55,52 +55,6 @@ def login_action(
     return RedirectResponse(url="/admin/dashboard", status_code=303)
 
 
-@router.post("/login")
-def login_action(
-    request: Request,
-    username: str = Form(...),
-    password: str = Form(...),
-    db: Session = Depends(get_db),
-):
-    login_value = username.strip().lower()
-
-    if not login_value:
-        return templates.TemplateResponse(
-            "auth/login.html",
-            {
-                "request": request,
-                "error": "Debes ingresar tu correo",
-            },
-            status_code=400,
-        )
-
-    user = db.query(User).filter(User.username == login_value).first()
-
-    if not user:
-        return templates.TemplateResponse(
-            "auth/login.html",
-            {
-                "request": request,
-                "error": "Usuario no existe",
-            },
-            status_code=401,
-        )
-
-    if not verify_password(password, user.password_hash):
-        return templates.TemplateResponse(
-            "auth/login.html",
-            {
-                "request": request,
-                "error": "Credenciales incorrectas",
-            },
-            status_code=401,
-        )
-
-    request.session["user_id"] = user.id
-
-    return RedirectResponse("/admin/dashboard", status_code=303)
-
-
 # ---------- LOGOUT ----------
 @router.get("/logout")
 def logout(request: Request):
