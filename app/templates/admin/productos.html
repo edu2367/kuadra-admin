@@ -12,6 +12,7 @@
 
     <div class="card-b">
         <form class="form-row" action="/admin/productos/crear" method="post">
+            <input type="hidden" name="csrf_token" value="{{ request.session.get('csrf_token') }}">
             <div class="field grow">
                 <label>Nombre</label>
                 <input class="input" name="nombre" placeholder="Ej: Sustrato premium 20L" required>

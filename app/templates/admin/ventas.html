@@ -26,6 +26,7 @@
             {% endif %}
 
             <form method="post" action="/admin/ventas" class="row" style="display:flex; gap:14px; flex-wrap:wrap;">
+                <input type="hidden" name="csrf_token" value="{{ request.session.get('csrf_token') }}">
                 <div class="field" style="min-width:260px;">
                     <label>Sucursal</label>
                     <select name="sucursal_id">

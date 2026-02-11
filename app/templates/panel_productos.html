@@ -13,6 +13,7 @@
 
         <div class="card-b">
             <form action="/panel/productos/crear" method="post">
+                <input type="hidden" name="csrf_token" value="{{ request.session.get('csrf_token') }}">
                 <div class="row">
                     <div class="field" style="min-width:240px">
                         <label>Nombre</label>

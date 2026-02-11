@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from app.db import get_db
 
 from app.db import SessionLocal
+from app.csrf import csrf_dependency
 from app.models.user import User
 from app.security import hash_password, verify_password
 
@@ -32,6 +33,7 @@ def login_action(
     username: str = Form(...),
     password: str = Form(...),
     db: Session = Depends(get_db),
+    _csrf: None = csrf_dependency(),
 ):
     login_value = username.strip().lower()
 
@@ -78,6 +80,7 @@ def recover_action(
     request: Request,
     email: str = Form(...),
     db: Session = Depends(get_db),
+    _csrf: None = csrf_dependency(),
 ):
     user = db.query(User).filter(User.username == email.strip().lower()).first()
     if not user:
@@ -114,6 +117,7 @@ def register_action(
     password: str = Form(...),
     password2: str = Form(...),
     db: Session = Depends(get_db),
+    _csrf: None = csrf_dependency(),
 ):
     email = email.strip().lower()
 

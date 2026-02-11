@@ -14,6 +14,7 @@ from io import BytesIO
 
 # 4️⃣ App interna (DB primero)
 from app.db import get_db
+from app.csrf import csrf_dependency
 
 # 5️⃣ MODELOS (esto es CLAVE)
 from app.models import Producto, Sucursal
@@ -149,6 +150,7 @@ def admin_crear_producto(
     precio: float = Form(0),
     descripcion: str = Form(""),
     db: Session = Depends(get_db),
+    _csrf: None = csrf_dependency(),
 ):
     nombre = nombre.strip()
     sku = sku.strip()
@@ -204,6 +206,7 @@ def admin_ajustar_stock(
     producto_id: int = Form(...),
     delta: int = Form(...),
     db: Session = Depends(get_db),
+    _csrf: None = csrf_dependency(),
 ):
     st = (
         db.query(Stock)
@@ -257,6 +260,7 @@ def crear_venta(
     producto_id: int = Form(...),
     qty: int = Form(...),
 ):
+    _csrf: None = csrf_dependency()
     if qty <= 0:
         return RedirectResponse(url="/admin/ventas", status_code=303)
 

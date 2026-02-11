@@ -85,6 +85,7 @@
 
                 <td>
                     <form action="/admin/stock/ajustar" method="post">
+                        <input type="hidden" name="csrf_token" value="{{ request.session.get('csrf_token') }}">
                         <input type="hidden" name="sucursal_id" value="{{ sucursal_id }}">
                         <input type="hidden" name="producto_id" value="{{ p.id }}">
                         <input class="delta" type="hidden" name="delta" value="0">

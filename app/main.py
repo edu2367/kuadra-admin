@@ -45,6 +45,18 @@ async def protect_admin_panel(request, call_next):
 
     return await call_next(request)
 
+
+@app.middleware("http")
+async def ensure_csrf_token(request, call_next):
+    # Ensure every session has a CSRF token for forms
+    import secrets
+
+    if "csrf_token" not in request.session:
+        request.session["csrf_token"] = secrets.token_urlsafe(32)
+
+    response = await call_next(request)
+    return response
+
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 app.include_router(admin.router)

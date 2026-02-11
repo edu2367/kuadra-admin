@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.db import get_db
 from app.models import Producto, Sucursal, Stock
+from app.csrf import csrf_dependency
 
 router = APIRouter(prefix="/panel", tags=["Panel"])
 templates = Jinja2Templates(directory="app/templates")
@@ -62,6 +63,7 @@ def panel_crear_producto(
     precio: float = Form(0),
     descripcion: str = Form(""),
     db: Session = Depends(get_db),
+    _csrf: None = csrf_dependency(),
 ):
     nombre = nombre.strip()
     sku = sku.strip()
@@ -117,6 +119,7 @@ def panel_ajustar_stock(
     producto_id: int = Form(...),
     delta: int = Form(...),
     db: Session = Depends(get_db),
+    _csrf: None = csrf_dependency(),
 ):
     st = (
         db.query(Stock)
