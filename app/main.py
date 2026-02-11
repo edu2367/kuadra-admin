@@ -2,12 +2,13 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
 from starlette.middleware.sessions import SessionMiddleware
+import os
 
 from app.routers import admin
 from app.routers import reportes
 from app.routers import auth
 
-from app.database import engine, Base
+from app.db import engine, Base
 import app.models
 
 Base.metadata.create_all(bind=engine)
@@ -15,7 +16,9 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI(title="KUADRA - frutales verde limon")
 app.add_middleware(
     SessionMiddleware,
-    secret_key="CAMBIA_ESTE_SECRET_LARGO_Y_RANDOM_123456789",
+    secret_key=os.getenv(
+        "SESSION_SECRET", "CAMBIA_ESTE_SECRET_LARGO_Y_RANDOM_123456789"
+    ),
     same_site="lax",
     https_only=False,  # en producción con https ponlo True
 )

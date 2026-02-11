@@ -29,7 +29,7 @@ import json
 
 
 def require_login(request: Request):
-    if not request.session.get("user"):
+    if not request.session.get("user_id"):
         return RedirectResponse("/auth/login", status_code=302)
 
 
