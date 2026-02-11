@@ -77,3 +77,13 @@ def recover_action(
         return templates.TemplateResponse(
             "auth/recover.html",
             {"request": request, "error": "No existe un usuario con ese correo"},
+            status_code=404,
+        )
+
+    return templates.TemplateResponse(
+        "auth/recover.html",
+        {
+            "request": request,
+            "msg": "Se ha enviado un enlace de recuperación a tu correo",
+        },
+    )

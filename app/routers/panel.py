@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.db import get_db
 from app.models import Producto, Sucursal, Stock
-from app.csrf import csrf_dependency
+
 
 router = APIRouter(prefix="/panel", tags=["Panel"])
 templates = Jinja2Templates(directory="app/templates")
