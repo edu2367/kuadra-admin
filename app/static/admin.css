@@ -105,8 +105,8 @@ body {
 }
 
 .nav-item.active {
-    background: rgba(166, 201, 106, .92);
-    color: #112015;
+    background: rgba(100, 180, 220, .85);
+    color: #0a1f2e;
     font-weight: 900;
 }
 
@@ -594,7 +594,7 @@ h1 {
 
 /* Usa el color que YA tenías */
 .sidebar {
-    background: var(--olive-900) !important;
+    background: linear-gradient(180deg, #0f3451 0%, #0a1f2e 100%) !important;
 }
 
 /* Textura ultra sutil encima (no cambia color) */
