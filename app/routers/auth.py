@@ -62,43 +62,43 @@ def login_action(
     password: str = Form(...),
     db: Session = Depends(get_db),
 ):
-    import logging
-
-    log = logging.getLogger("uvicorn.error")
-
-    login_value = (username or "").strip().lower()
+    login_value = username.strip().lower()
 
     if not login_value:
         return templates.TemplateResponse(
             "auth/login.html",
-            {"request": request, "error": "Debes ingresar tu correo"},
+            {
+                "request": request,
+                "error": "Debes ingresar tu correo",
+            },
             status_code=400,
         )
 
     user = db.query(User).filter(User.username == login_value).first()
-    log.info(f"LOGIN email={login_value} user_found={bool(user)}")
 
     if not user:
         return templates.TemplateResponse(
             "auth/login.html",
-            {"request": request, "error": "Credenciales incorrectas"},
+            {
+                "request": request,
+                "error": "Usuario no existe",
+            },
             status_code=401,
         )
 
-    # ya sabemos que user no es None
     if not verify_password(password, user.password_hash):
         return templates.TemplateResponse(
             "auth/login.html",
-            {"request": request, "error": "Credenciales incorrectas"},
+            {
+                "request": request,
+                "error": "Credenciales incorrectas",
+            },
             status_code=401,
         )
 
-    # OK: setear sesión y entrar
     request.session["user_id"] = user.id
-    request.session["user_email"] = user.username
-    request.session["is_admin"] = bool(user.is_admin)
 
-    return RedirectResponse("/admin/dashboard", status_code=302)
+    return RedirectResponse("/admin/dashboard", status_code=303)
 
 
 # ---------- LOGOUT ----------

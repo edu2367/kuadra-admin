@@ -23,25 +23,20 @@
             <div class="err">{{ error }}</div>
             {% endif %}
 
-            <form method="post">
+            <form method="post" action="/auth/login">
+
                 <div class="field">
                     <label>Correo</label>
-                    <input type="email" name="email" placeholder="correo@ejemplo.com" required>
+                    <input type="email" name="username" placeholder="correo@ejemplo.com" required>
                 </div>
 
                 <div class="field">
                     <label>Contraseña</label>
-                    <input type="password" name="password" placeholder="••••••••" maxlength="64" required>
+                    <input type="password" name="password" placeholder="••••••••" required>
                 </div>
 
                 <button class="btn" type="submit">Ingresar</button>
 
-                <div class="help">
-                    ¿Problemas con tu clave? <a href="/auth/recuperar">Recuperar clave</a>
-                </div>
-                <div class="help">
-                    ¿No tienes cuenta? <a href="/auth/register">Crear cuenta</a>
-                </div>
             </form>
 
         </div>
