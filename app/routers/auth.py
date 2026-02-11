@@ -26,22 +26,33 @@ def login_page(request: Request):
 @router.post("/login")
 def login_action(
     request: Request,
-    email: str = Form(None),
     username: str = Form(None),
-    password: str = Form(...),
+    password: str = Form(None),
     db: Session = Depends(get_db),
 ):
-    login_value = (email or username or "").strip().lower()
+    login_value = (username or "").strip().lower()
 
     if not login_value:
         return templates.TemplateResponse(
             "auth/login.html",
-            {
-                "request": request,
-                "error": "Debes ingresar tu correo",
-            },
+            {"request": request, "error": "Debes ingresar tu correo"},
             status_code=400,
         )
+
+    user = db.query(User).filter(User.username == login_value).first()
+
+    if not user or not verify_password(password, user.password_hash):
+        return templates.TemplateResponse(
+            "auth/login.html",
+            {"request": request, "error": "Credenciales incorrectas"},
+            status_code=401,
+        )
+
+    # ✅ AQUÍ PASA EL LOGIN: GUARDA SESIÓN Y REDIRIGE (IMPORTANTE: RETURN)
+    request.session["user_id"] = user.id
+    request.session["is_admin"] = bool(getattr(user, "is_admin", False))
+
+    return RedirectResponse(url="/admin/dashboard", status_code=303)
 
 
 @router.post("/login")
