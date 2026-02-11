@@ -61,6 +61,12 @@ def logout(request: Request):
     return RedirectResponse("/auth/login", status_code=302)
 
 
+# ---------- RECOVER ----------
+@router.get("/recover")
+def recover_page(request: Request):
+    return templates.TemplateResponse("auth/recover.html", {"request": request})
+
+
 # ---------- REGISTER ----------
 @router.get("/register")
 def register_page(request: Request):
