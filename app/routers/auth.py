@@ -104,6 +104,10 @@ def recover_action(
 # ---------- REGISTER ----------
 @router.get("/register")
 def register_page(request: Request):
+    # Forzar generación de CSRF token si no existe
+    import secrets
+    if "csrf_token" not in request.session:
+        request.session["csrf_token"] = secrets.token_urlsafe(32)
     return templates.TemplateResponse("auth/register.html", {"request": request})
 
 
