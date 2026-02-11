@@ -1,5 +1,7 @@
 # KUADRA Admin
 
+[![CI](https://github.com/edu2367/kuadra-admin/actions/workflows/ci.yml/badge.svg)](https://github.com/edu2367/kuadra-admin/actions/workflows/ci.yml)
+
 Sistema administrativo para gestión de productos, stock y ventas.
 
 ## 🚀 Tecnologías
