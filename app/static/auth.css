@@ -169,3 +169,26 @@ body {
 .brand-name {
     color: #E5E7EB;
 }
+
+.extra-links {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 0.95rem;
+    color: #fff;
+    /* texto base en blanco */
+}
+
+.extra-links a {
+    color: #2196F3;
+    /* azul moderno */
+    text-decoration: none;
+    margin: 0 10px;
+    font-weight: 600;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.extra-links a:hover {
+    color: #64B5F6;
+    /* azul más claro al pasar el mouse */
+    text-shadow: 0 0 5px rgba(100, 181, 246, 0.8);
+}
