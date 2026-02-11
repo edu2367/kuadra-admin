@@ -27,3 +27,10 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+# 👇 Importa tus modelos para que se registren en Base
+from app.models import user
+
+# 👇 Crear todas las tablas definidas en los modelos
+Base.metadata.create_all(bind=engine)
