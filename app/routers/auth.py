@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Request, Form, Depends
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
-
 from sqlalchemy.orm import Session
+
 from app.db import get_db
 from app.models.user import User
 from app.security import hash_password, verify_password
@@ -69,74 +69,11 @@ def recover_page(request: Request):
 @router.post("/recover")
 def recover_action(
     request: Request,
-    email: str = Form(...),
+    username: str = Form(...),
     db: Session = Depends(get_db),
 ):
-    user = db.query(User).filter(User.username == email.strip().lower()).first()
+    user = db.query(User).filter(User.username == username.strip().lower()).first()
     if not user:
         return templates.TemplateResponse(
             "auth/recover.html",
             {"request": request, "error": "No existe un usuario con ese correo"},
-            status_code=400,
-        )
-
-    return templates.TemplateResponse(
-        "auth/recover.html",
-        {
-            "request": request,
-            "msg": "Se ha enviado un enlace de recuperación a tu correo",
-        },
-    )
-
-
-# ---------- REGISTER ----------
-@router.get("/register")
-def register_page(request: Request):
-    return templates.TemplateResponse("auth/register.html", {"request": request})
-
-
-@router.post("/register")
-def register_action(
-    request: Request,
-    first_name: str = Form(...),
-    last_name: str = Form(...),
-    phone: str = Form(None),
-    email: str = Form(...),
-    password: str = Form(...),
-    password2: str = Form(...),
-    db: Session = Depends(get_db),
-):
-    email = email.strip().lower()
-
-    if password != password2:
-        return templates.TemplateResponse(
-            "auth/register.html",
-            {"request": request, "error": "Las contraseñas no coinciden"},
-            status_code=400,
-        )
-
-    exists = db.query(User).filter(User.username == email).first()
-    if exists:
-        return templates.TemplateResponse(
-            "auth/register.html",
-            {"request": request, "error": "Este correo ya está registrado"},
-            status_code=400,
-        )
-
-    user = User(
-        username=email,
-        password_hash=hash_password(password),
-        first_name=first_name.strip(),
-        last_name=last_name.strip(),
-        phone=(phone or "").strip() or None,
-        is_admin=False,
-    )
-
-    db.add(user)
-    db.commit()
-
-    # En vez de RedirectResponse, devolvemos directamente la plantilla de login
-    return templates.TemplateResponse(
-        "auth/login.html",
-        {"request": request, "msg": "Cuenta creada con éxito, inicia sesión"},
-    )

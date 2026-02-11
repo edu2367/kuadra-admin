@@ -1,7 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
 from app.config import settings
-
 import os
 
 print("CWD =", os.getcwd())
@@ -27,10 +26,3 @@ def get_db():
         yield db
     finally:
         db.close()
-
-
-# 👇 Importa tus modelos para que se registren en Base
-from app.models import user
-
-# 👇 Crear todas las tablas definidas en los modelos
-Base.metadata.create_all(bind=engine)
