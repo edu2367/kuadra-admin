@@ -4,9 +4,11 @@
     --line: rgba(255, 255, 255, .14);
     --text: rgba(255, 255, 255, .92);
     --muted: rgba(255, 255, 255, .65);
-    --accent: rgba(56, 189, 248, .95);
+    --accent: #2196F3;
+    /* azul sólido moderno */
 }
 
+/* RESET */
 * {
     box-sizing: border-box
 }
@@ -46,7 +48,7 @@ body {
     backdrop-filter: blur(10px);
 }
 
-/* LOGO (MÁS PEQUEÑO PRO) */
+/* LOGO */
 .login-brand {
     display: flex;
     justify-content: center;
@@ -55,7 +57,6 @@ body {
 
 .login-brand img {
     width: 140px;
-    /* <- aquí achicamos */
     height: auto;
     display: block;
     filter: drop-shadow(0 10px 20px rgba(0, 0, 0, .35));
@@ -70,14 +71,24 @@ body {
     color: var(--text);
 }
 
-/* ALERTA ERROR */
+/* ALERTAS */
 .err {
     margin: 0 0 10px;
     padding: 10px 12px;
     border-radius: 14px;
     background: rgba(239, 68, 68, .12);
     border: 1px solid rgba(239, 68, 68, .35);
-    color: rgba(255, 255, 255, .92);
+    color: var(--text);
+    font-size: 13px;
+}
+
+.msg {
+    margin: 0 0 10px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    background: rgba(34, 197, 94, .12);
+    border: 1px solid rgba(34, 197, 94, .35);
+    color: var(--text);
     font-size: 13px;
 }
 
@@ -95,12 +106,11 @@ body {
 
 .field input {
     width: 100%;
-    box-sizing: border-box;
-    padding: 14px 14px;
+    padding: 14px;
     border-radius: 14px;
     border: 1px solid rgba(255, 255, 255, .16);
     background: rgba(2, 6, 23, .55);
-    color: rgba(255, 255, 255, .95);
+    color: var(--text);
     outline: none;
 }
 
@@ -109,50 +119,15 @@ body {
 }
 
 .field input:focus {
-    border-color: rgba(56, 189, 248, .65);
-    box-shadow: 0 0 0 4px rgba(56, 189, 248, .18);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgba(33, 150, 243, .25);
 }
 
-/* 2 columnas SOLO en register (nombre/apellido) */
+/* GRID para register */
 .grid-2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
-}
-
-/* BOTON */
-.btn {
-    width: 100%;
-    margin-top: 16px;
-    padding: 13px 14px;
-    border-radius: 14px;
-    border: 1px solid rgba(56, 189, 248, .55);
-    background: rgba(56, 189, 248, .18);
-    color: rgba(255, 255, 255, .92);
-    font-weight: 900;
-    cursor: pointer;
-}
-
-.btn:hover {
-    background: rgba(56, 189, 248, .24);
-}
-
-/* LINKS ABAJO */
-.help {
-    margin-top: 14px;
-    text-align: center;
-    font-size: 12px;
-    color: rgba(255, 255, 255, .55);
-}
-
-.help a {
-    color: rgba(56, 189, 248, .95);
-    text-decoration: none;
-    font-weight: 800;
-}
-
-.help a:hover {
-    text-decoration: underline;
 }
 
 @media (max-width: 520px) {
@@ -161,26 +136,34 @@ body {
     }
 }
 
-/* === Ajuste logo KUADRA === */
-.logo svg {
-    fill: #FFFFFF;
+/* BOTON */
+.btn {
+    width: 100%;
+    margin-top: 16px;
+    padding: 13px 14px;
+    border-radius: 14px;
+    border: none;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.3s ease;
 }
 
-.brand-name {
-    color: #E5E7EB;
+.btn:hover {
+    background: #1565C0;
 }
 
+/* LINKS ABAJO */
 .extra-links {
     margin-top: 15px;
     text-align: center;
     font-size: 0.95rem;
     color: #fff;
-    /* texto base en blanco */
 }
 
 .extra-links a {
-    color: #2196F3;
-    /* azul moderno */
+    color: var(--accent);
     text-decoration: none;
     margin: 0 10px;
     font-weight: 600;
@@ -189,6 +172,5 @@ body {
 
 .extra-links a:hover {
     color: #64B5F6;
-    /* azul más claro al pasar el mouse */
     text-shadow: 0 0 5px rgba(100, 181, 246, 0.8);
 }
