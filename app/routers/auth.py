@@ -131,3 +131,12 @@ def register_action(
         phone=(phone or "").strip() or None,
         is_admin=False,
     )
+
+    db.add(user)
+    db.commit()
+
+    # En vez de RedirectResponse, devolvemos directamente la plantilla de login
+    return templates.TemplateResponse(
+        "auth/login.html",
+        {"request": request, "msg": "Cuenta creada con éxito, inicia sesión"},
+    )
