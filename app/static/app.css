@@ -68,8 +68,8 @@ body.app {
 }
 
 .nav-item.active {
-    background: #84cc16;
-    color: #1f2937;
+    background: transparent;
+    color: #ffffff;
     font-weight: 600;
 }
 
