@@ -50,7 +50,7 @@ def login_action(
     request.session["user_id"] = user.id
     request.session["is_admin"] = bool(getattr(user, "is_admin", False))
 
-    return RedirectResponse("/admin/dashboard", status_code=303)
+    return RedirectResponse("/admin/dashboard", status_code=302)
 
 
 # ---------- LOGOUT ----------
