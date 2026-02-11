@@ -1,6 +1,6 @@
 from logging.config import fileConfig
 from app.db import Base
-from app.models import Producto, Sucursal, Stock
+import app.models
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
