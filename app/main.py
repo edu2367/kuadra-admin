@@ -7,7 +7,7 @@ from app.routers import admin
 from app.routers import reportes
 from app.routers import auth
 
-from app.db import engine, Base
+from app.database import engine, Base
 import app.models
 
 Base.metadata.create_all(bind=engine)

@@ -3,13 +3,18 @@ from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 
 from sqlalchemy.orm import Session
+from app.database import get_db
 
-from app.db import get_db
+
+from app.database import SessionLocal
 from app.models.user import User
 from app.security import hash_password, verify_password
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 templates = Jinja2Templates(directory="app/templates")
+
+from sqlalchemy.orm import Session
+from app.database import SessionLocal
 
 
 @router.get("/")
