@@ -4,16 +4,11 @@ from fastapi.templating import Jinja2Templates
 
 from sqlalchemy.orm import Session
 from app.db import get_db
-
-from app.db import SessionLocal
-from app.csrf import csrf_dependency
 from app.models.user import User
 from app.security import hash_password, verify_password
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 templates = Jinja2Templates(directory="app/templates")
-
-from sqlalchemy.orm import Session
 
 
 @router.get("/")
@@ -33,7 +28,6 @@ def login_action(
     username: str = Form(...),
     password: str = Form(...),
     db: Session = Depends(get_db),
-    _csrf: None = csrf_dependency(),
 ):
     login_value = username.strip().lower()
 
@@ -65,14 +59,11 @@ def logout(request: Request):
     request.session.clear()
     return RedirectResponse("/auth/login", status_code=302)
 
+
 # ---------- RECOVER ----------
 @router.get("/recover")
 def recover_page(request: Request):
     return templates.TemplateResponse("auth/recover.html", {"request": request})
-
-
-# 👉 Pega este bloque justo aquí, debajo del GET
-from fastapi import Form
 
 
 @router.post("/recover")
@@ -80,7 +71,6 @@ def recover_action(
     request: Request,
     email: str = Form(...),
     db: Session = Depends(get_db),
-    _csrf: None = csrf_dependency(),
 ):
     user = db.query(User).filter(User.username == email.strip().lower()).first()
     if not user:
@@ -90,8 +80,6 @@ def recover_action(
             status_code=400,
         )
 
-    # Aquí más adelante puedes generar un token y enviar un correo real.
-    # Por ahora mostramos un mensaje de confirmación.
     return templates.TemplateResponse(
         "auth/recover.html",
         {
@@ -104,10 +92,6 @@ def recover_action(
 # ---------- REGISTER ----------
 @router.get("/register")
 def register_page(request: Request):
-    # Forzar generación de CSRF token si no existe
-    import secrets
-    if "csrf_token" not in request.session:
-        request.session["csrf_token"] = secrets.token_urlsafe(32)
     return templates.TemplateResponse("auth/register.html", {"request": request})
 
 
@@ -121,7 +105,6 @@ def register_action(
     password: str = Form(...),
     password2: str = Form(...),
     db: Session = Depends(get_db),
-    _csrf: None = csrf_dependency(),
 ):
     email = email.strip().lower()
 
@@ -132,7 +115,6 @@ def register_action(
             status_code=400,
         )
 
-    # validar que no exista
     exists = db.query(User).filter(User.username == email).first()
     if exists:
         return templates.TemplateResponse(
@@ -149,8 +131,3 @@ def register_action(
         phone=(phone or "").strip() or None,
         is_admin=False,
     )
-
-    db.add(user)
-    db.commit()
-
-    return RedirectResponse("/auth/login", status_code=303)
