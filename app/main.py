@@ -13,9 +13,7 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="KUADRA")
 
-SESSION_SECRET = os.getenv("SESSION_SECRET")
-if not SESSION_SECRET:
-    raise RuntimeError("SESSION_SECRET no configurado en variables de entorno")
+SESSION_SECRET = os.getenv("SESSION_SECRET", "dev-secret-change-me")
 
 app.add_middleware(
     SessionMiddleware,
