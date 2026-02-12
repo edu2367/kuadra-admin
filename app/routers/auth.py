@@ -53,6 +53,75 @@ def login_action(
     return RedirectResponse("/admin/dashboard", status_code=302)
 
 
+# ---------- REGISTER ----------
+@router.get("/register")
+def register_page(request: Request):
+    return templates.TemplateResponse("auth/register.html", {"request": request})
+
+
+@router.post("/register")
+def register_action(
+    request: Request,
+    first_name: str = Form(...),
+    last_name: str = Form(...),
+    phone: str = Form(""),
+    username: str = Form(...),
+    password: str = Form(...),
+    password2: str = Form(...),
+    db: Session = Depends(get_db),
+):
+    email = username.strip().lower()
+
+    if not email:
+        return templates.TemplateResponse(
+            "auth/register.html",
+            {"request": request, "error": "Debes ingresar un correo"},
+            status_code=400,
+        )
+
+    if password != password2:
+        return templates.TemplateResponse(
+            "auth/register.html",
+            {"request": request, "error": "Las contraseñas no coinciden"},
+            status_code=400,
+        )
+
+    if len(password) < 6:
+        return templates.TemplateResponse(
+            "auth/register.html",
+            {
+                "request": request,
+                "error": "La contraseña debe tener al menos 6 caracteres",
+            },
+            status_code=400,
+        )
+
+    existing = db.query(User).filter(User.username == email).first()
+    if existing:
+        return templates.TemplateResponse(
+            "auth/register.html",
+            {"request": request, "error": "Ese correo ya está registrado"},
+            status_code=409,
+        )
+
+    # 👇 primer usuario admin; si ya hay usuarios, los siguientes no
+    is_first_user = db.query(User).count() == 0
+
+    new_user = User(
+        username=email,
+        password_hash=hash_password(password),
+        first_name=first_name.strip(),
+        last_name=last_name.strip(),
+        phone=phone.strip() or None,
+        is_admin=is_first_user,
+    )
+
+    db.add(new_user)
+    db.commit()
+
+    return RedirectResponse("/auth/login", status_code=302)
+
+
 # ---------- LOGOUT ----------
 @router.get("/logout")
 def logout(request: Request):

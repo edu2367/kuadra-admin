@@ -13,13 +13,16 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="KUADRA")
 
-SESSION_SECRET = os.getenv("SESSION_SECRET", "dev-secret-change-me")
+SESSION_SECRET = os.getenv("SESSION_SECRET")
+
+if not SESSION_SECRET or SESSION_SECRET == "dev-secret-change-me":
+    raise RuntimeError("SESSION_SECRET no configurado o inseguro")
 
 app.add_middleware(
     SessionMiddleware,
     secret_key=SESSION_SECRET,
     same_site="lax",
-    https_only=True,  # en producción con https
+    https_only=False,  # en producción con https
 )
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
