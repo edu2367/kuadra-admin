@@ -1,0 +1,53 @@
+{% extends "admin/layout.html" %}
+
+{% block content %}
+<script src="https://cdn.tailwindcss.com"></script>
+
+<div class="p-6 max-w-4xl">
+    <div class="bg-white p-6 rounded-lg shadow border border-gray-200 mb-8">
+        <h2 class="text-xl font-bold mb-4">Agregar Nueva Sucursal</h2>
+
+        <form action="/admin/sucursales" method="POST" class="flex flex-col md:flex-row gap-4 items-end">
+            <div class="flex-1">
+                <label class="block text-sm font-semibold text-gray-600 mb-1">Nombre</label>
+                <input type="text" name="nombre" required placeholder="Ej: Local Centro"
+                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500">
+            </div>
+            <div class="flex-1">
+                <label class="block text-sm font-semibold text-gray-600 mb-1">Dirección</label>
+                <input type="text" name="direccion" placeholder="Ej: Av. Principal 123"
+                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500">
+            </div>
+            <button type="submit"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded transition">
+                Guardar
+            </button>
+        </form>
+    </div>
+
+    <div class="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
+        <table class="w-full text-left">
+            <thead class="bg-gray-50 border-b border-gray-200">
+                <tr>
+                    <th class="p-4 font-semibold text-gray-600">ID</th>
+                    <th class="p-4 font-semibold text-gray-600">Nombre</th>
+                    <th class="p-4 font-semibold text-gray-600">Dirección</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sucursal in sucursales %}
+                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                    <td class="p-4 text-gray-500">#{{ sucursal.id }}</td>
+                    <td class="p-4 font-medium text-gray-800">{{ sucursal.nombre }}</td>
+                    <td class="p-4 text-gray-600">{{ sucursal.direccion or 'Sin dirección' }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="3" class="p-4 text-center text-gray-400">No hay sucursales registradas.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,6 +1,6 @@
 # 1️⃣ FastAPI y utilidades
 from fastapi import APIRouter, Request, Depends, Form
-from fastapi.responses import RedirectResponse, StreamingResponse
+from fastapi.responses import RedirectResponse, StreamingResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
 from typing import Optional
 
@@ -21,8 +21,6 @@ from app.models.stock import Stock
 from app.models.ventas import Venta, VentaItem
 
 # 6️⃣ Extras (Excel)
-from fastapi.responses import StreamingResponse
-from io import BytesIO
 from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
 import json
@@ -162,6 +160,54 @@ def admin_crear_producto(
     db.add(p)
     db.commit()
     return RedirectResponse(url="/admin/productos", status_code=303)
+
+
+# ==========================================
+# 🏢 NUEVAS RUTAS DE SUCURSALES
+# ==========================================
+
+
+@router.get("/sucursales", response_class=HTMLResponse)
+def vista_sucursales(request: Request, db: Session = Depends(get_db)):
+    # Trae todas las sucursales ordenadas por ID
+    sucursales = db.query(Sucursal).order_by(Sucursal.id.asc()).all()
+
+    return templates.TemplateResponse(
+        "admin/sucursales.html",
+        {
+            "request": request,
+            "title": "Sucursales",
+            "subtitle": "Gestión de locales",
+            "active": "sucursales",
+            "sucursales": sucursales,
+        },
+    )
+
+
+@router.post("/sucursales")
+def crear_sucursal_form(
+    request: Request,
+    nombre: str = Form(...),
+    direccion: str = Form(""),
+    db: Session = Depends(get_db),
+):
+    nombre = nombre.strip()
+    direccion = direccion.strip()
+
+    # Verificamos si ya existe para no duplicar locales
+    existe = db.query(Sucursal).filter(Sucursal.nombre == nombre).first()
+    if not existe:
+        nueva_sucursal = Sucursal(nombre=nombre, direccion=direccion)
+        db.add(nueva_sucursal)
+        db.commit()
+
+    # Redirige de vuelta a la misma página para ver la tabla actualizada
+    return RedirectResponse(url="/admin/sucursales", status_code=303)
+
+
+# ==========================================
+# FIN RUTAS SUCURSALES
+# ==========================================
 
 
 @router.get("/stock")
